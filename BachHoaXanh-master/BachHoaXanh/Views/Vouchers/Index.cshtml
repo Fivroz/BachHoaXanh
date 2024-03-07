@@ -1,0 +1,257 @@
+﻿@model IEnumerable<BachHoaXanh.Models.Voucher>
+
+@{
+    ViewBag.Title = "Voucher";
+    Layout = "~/Views/Shared/_NVKD.cshtml";
+}
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Danh sách Voucher</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Thêm Voucher</button>
+    </li>
+    <li>
+        <a class="nav-link" href="#" onclick="updateVouchers()">Cập nhật vouchers</a>
+    </li>
+</ul>
+<div class="tab-pane fade show active bg-white" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+    <div class="card-body">
+        <!-- Table with stripped rows -->
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Mã code</th>
+                    <th scope="col">Trị giá</th>
+                    <th scope="col">Ngày hết hạn</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col">Trạng thái</th>
+                    <th>Tính năng</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@item.MaVoucher</th>
+                        <th scope="row"><a href="#">@item.MaCode</a></th>
+                        @if (item.GiaTriType == "phantram")
+                        {
+                            <th scope="row">@(Math.Round(item.GiaTri, 2)*100)%</th>
+                        }
+                        else
+                        {
+                            <th scope="row">@String.Format("{0:N0}", item.GiaTri)₫</th>
+                        }
+
+
+                        <th class="col">@item.NgayHetHan</th>
+                        <th class="col">@item.MoTa</th>
+                        <th class="col">@item.TrangThai</th>
+                        <th class="col">
+                            <button class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "Vouchers", new { id = item.MaVoucher })">Chỉnh sửa</button>
+                            @if (item.TrangThai == "Đang mở")
+                            {
+                                <button class="block-voucher btn btn-danger" data-voucher-id="@item.MaVoucher">Chặn</button>
+                            }
+                            else if (item.TrangThai == "Đã khóa")
+                            {
+                                <button class="undo-voucher btn btn-secondary" data-voucher-id="@item.MaVoucher">Hoạt động</button>
+
+                            }
+                            else { }
+                        </th>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@*Modal Create*@
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Thêm Voucher</h5>
+                <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="createModalFrame" scrolling="no" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal edit*@
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Chỉnh sửa Voucher</h5>
+                <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="editModalFrame" scrolling="no" width="100%" height="400px" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal chặn*@
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Xác nhận khóa voucher</h5>
+                <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn khóa voucher này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal hoạt động*@
+<div class="modal fade" id="undoModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Xác nhận hoạt động lại voucher</h5>
+                <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn muốn hoạt động lại voucher này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirmUndo">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $(document).ready(function () {
+            $(".open-modal").click(function () {
+                var url = $(this).data("url");
+                $("#editModalFrame").attr("src", url);
+                $("#editModal").modal("show");
+            });
+            $("#editModal").on("hidden.bs.modal", function () {
+                location.reload();
+            });
+        });
+
+         $(document).ready(function () {
+            // Open the create modal when the button is clicked
+            $("#profile-tab").click(function () {
+                var url = "@Url.Action("Create", "Vouchers")";
+                $("#createModalFrame").attr("src", url);
+                $("#createModal").modal("show");
+            });
+             $("#createModal").on("hidden.bs.modal", function () {
+                 location.reload();
+             });
+         });
+
+        $(document).ready(function () {
+            $(".block-voucher").click(function () {
+                var blockID = $(this).data("voucher-id");
+                $("#confirmCancel").data("voucher-id", blockID);
+                $("#cancelModal").modal("show");
+
+                $("#cancelModal").on("hidden.bs.modal", function () {
+                    location.reload();
+                });
+        });
+
+        $("#confirmCancel").click(function () {
+            var blockID = $(this).data("voucher-id");
+            // Gửi request lên server để cập nhật trạng thái của đơn hàng thành "Chặn khách hàng"
+            $.ajax({
+                url: "@Url.Action("BlockVoucher", "Vouchers")", // Đường dẫn tới phương thức xử lý việc chặn
+                type: "POST",
+                data: {
+                    id: blockID
+                },
+                success: function () {
+                    // Xử lý thêm logic tại đây sau khi chặn thành công
+                    alert("Khóa voucher thành công!");
+                    // Reload trang để cập nhật danh sách khách hàng
+                    location.reload();
+                },
+                error: function () {
+                    // Xử lý thêm logic tại đây khi có lỗi xảy ra khi chặn khách hàng
+                    alert("Đã xảy ra lỗi khi khóa. Vui lòng thử lại sau.");
+                }
+            });
+
+            $("#cancelModal").modal("hide");
+        });
+        });
+        $(document).ready(function () {
+            $(".undo-voucher").click(function () {
+                var undoID = $(this).data("voucher-id");
+                $("#confirmUndo").data("voucher-id", undoID);
+                $("#undoModal").modal("show");
+
+                $("#undoModal").on("hidden.bs.modal", function () {
+                    location.reload();
+                });
+        });
+            $("#confirmUndo").click(function () {
+                var undoID = $(this).data("voucher-id");
+            // Gửi request lên server để cập nhật trạng thái của đơn hàng thành "Chặn khách hàng"
+            $.ajax({
+                url: "@Url.Action("UndoVoucher", "Vouchers")", // Đường dẫn tới phương thức xử lý việc chặn
+                type: "POST",
+                data: {
+                    id: undoID
+                },
+                success: function () {
+                    // Xử lý thêm logic tại đây sau khi chặn thành công
+                    alert("Hoạt động lại voucher thành công!");
+                    // Reload trang để cập nhật danh sách khách hàng
+                    location.reload();
+                },
+                error: function () {
+                    // Xử lý thêm logic tại đây khi có lỗi xảy ra khi chặn khách hàng
+                    alert("Đã xảy ra lỗi khi thay đổi. Vui lòng thử lại sau.");
+                }
+            });
+
+            $("#cancelModal").modal("hide");
+        });
+        });
+        function updateVouchers() {
+             // Gửi một yêu cầu AJAX đến action "UpdateStatusVouchers"
+            $.ajax({
+                url: '@Url.Action("UpdateStatusVouchers", "Vouchers")',
+                type: 'POST',
+                success: function (result) {
+                    // Cập nhật thành công, thực hiện các hành động cần thiết (ví dụ: hiển thị thông báo)
+                    alert("Cập nhật voucher thành công!");
+                    location.reload();
+                },
+                error: function (error) {
+                    // Xử lý lỗi nếu có
+                    alert("Đã xảy ra lỗi: " + error);
+                }
+            });
+        }
+    </script>
+}

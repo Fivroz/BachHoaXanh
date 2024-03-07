@@ -1,0 +1,12 @@
+﻿@model IEnumerable<BachHoaXanh.Models.ThuongHieu>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-2 col-md-4 col-sm-6 ">
+            <a href="@Url.Action("SanPhamTheoTH", "Home", new { id = item.MaThuongHieu })" style="border:none !important;">
+                <img src="~/Styles/Image/ThuongHieu/@item.HinhThuongHieu" alt="@item.TenThuongHieu" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+            </a>
+        </div>
+    }
+</div>

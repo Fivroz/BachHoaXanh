@@ -1,0 +1,32 @@
+﻿@model BachHoaXanh.Models.LoaiDanhMuc
+@{
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger list-unstyled" })
+    @Html.HiddenFor(model => model.MaLoaiDanhMuc)
+
+    <div class="form-group m-1">
+        @Html.LabelFor(model => model.TenLoaiDanhMuc, "Tên loại danh mục", htmlAttributes: new { @class = "control-label col-md-2 m-1" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TenLoaiDanhMuc, new { htmlAttributes = new { @class = "form-control m-1 w-100", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.TenLoaiDanhMuc, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mt-2 text-center">
+        <input type="submit" value="Lưu lại" class="btn btn-default w-50" style="background: #018846; color: white; width: 50%" />
+    </div>
+</div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,36 @@
+﻿<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Trang Web của chúng tôi vẫn chưa phát triển được tính năng lựa chọn phương thức thanh toán.
+                    Quý khách hàng chỉ có thể thanh toán bằng tiền mặt. Đơn hàng của quý khách sẽ được gửi đến theo địa chỉ lúc đăng ký.
+                    Xin lỗi vì sự bất tiện này. Trân trọng.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var orderSuccess = (bool)(Session["OrderSuccess"] ?? false);
+    Session["OrderSuccess"] = false; // Reset the flag after displaying the modal
+}
+
+<script>
+  $(document).ready(function () {
+    var orderSuccess = @orderSuccess;
+    if (orderSuccess) {
+      // Show the notification modal
+      $("#notificationModal").modal('show');
+    }
+  });
+</script>

@@ -1,0 +1,111 @@
+﻿@model IEnumerable<BachHoaXanh.Models.DonDatHang>
+
+@{
+    ViewBag.Title = "Đơn đặt hàng";
+    Layout = "~/Views/Shared/_NVGH.cshtml";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Danh sách đơn đặt hàng</button>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0" style="background: #ffffff">
+        <table class="table table-striped table-hover datatable">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nhân viên</th>
+                    <th scope="col">Khách hàng</th>
+                    <th scope="col">SĐT</th>
+                    <th scope="col">Địa chỉ giao</th>
+                    <th scope="col">Tổng tiền</th>
+                    <th scope="col">Danh sách sản phẩm</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td scope="row">@item.MaDonHang</td>
+                        <td scope="row">
+                            @if (item.MaNhanVien == null)
+                            {
+                                <span>Chưa ai nhận đơn</span>
+                            }
+                            else
+                            {
+                                <span>@item.MaNhanVien, @item.NhanVien.HoTen</span>
+                            }
+                        </td>
+                        <td scope="row">@item.KhachHang.HoTen</td>
+                        <td scope="row">@item.SDTNhanHang</td>
+                        <td scope="row">@item.DiaChiNhanHang</td>
+                        <td scope="row">@String.Format("{0:N0}", @item.TongTien)₫</td>
+                        <td scope="row">
+                            <div class="list-group-item list-group-item-action rounded btn text-center dropdown-toggle" style=" color: white; width: fit-content; background: #018846; border: none !important" onclick="toggleSubMenu(this)">
+                                Danh sách sản phẩm
+                                <ul class="m-dropdown-menu list-unstyled" style="width: 100%; display:none">
+                                    <li>
+                                        @foreach (var sp in item.ChiTietDatHangs)
+                                        {
+                                            <div class="row" style="width:fit-content">
+                                                <a style="width:fit-content" href="@Url.Action("CTSanPham", "Home", new { id = sp.MaSanPham })"><img src="~/Styles/Image/SanPham/@sp.SanPham.HinhSanPham" style="height: 80px; width: 80px; margin: 1px;"></a>
+                                                <div class="col-4">
+                                                    <h6>@sp.SanPham.TenSanPham</h6>
+                                                    <h6>Số lượng: @sp.SoLuong</h6>
+                                                    <h6>Thành tiền:  @String.Format("{0:N0}", @sp.ThanhTien)</h6>
+                                                </div>
+                                            </div>
+                                        }
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td scope="row">
+                            <span style="color: red">@item.TrangThaiDonHang</span>
+                        </td>
+                        <td scope="row">
+                            <form id="nhanDonForm" action="@Url.Action("NhanDon","DonDatHangs", new {id = item.MaDonHang})" method="post">
+                                <button type="submit" class="btn btn-primary">Nhận đơn này</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script>
+    function toggleSubMenu(element) {
+        var subMenu = element.querySelector('.m-dropdown-menu');
+        subMenu.style.display = (subMenu.style.display === 'none') ? 'block' : 'none';
+    }
+    $('#nhanDonForm').submit(function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action');
+
+        $.ajax({
+            type: 'POST', // Phương thức gửi đi là POST
+            url: url, // URL để gửi yêu cầu
+            success: function (response) {
+                alert('Nhận đơn thành công!');
+                location.reload();// Hiển thị hộp thoại thông báo khi nhận đơn thành công
+            },
+            error: function (error) {
+                alert('Nhận đơn thất bại!'); // Hiển thị hộp thoại thông báo khi nhận đơn thất bại
+            }
+        });
+    });
+
+</script>
+

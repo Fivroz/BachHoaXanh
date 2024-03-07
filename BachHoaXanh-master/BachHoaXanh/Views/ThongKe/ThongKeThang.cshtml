@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "ThongKeThang";
+    Layout = "~/Views/Shared/_NVKD.cshtml";
+}
+
+@using (Html.BeginForm("ThongKeThang", "ThongKe", FormMethod.Get))
+{
+    <div>
+        @Html.Label("Tháng:")
+        @Html.DropDownList("Thang", ViewBag.DanhSachThang as SelectList, "-- Chọn tháng --")
+
+        @Html.Label("Năm:")
+        @Html.DropDownList("Nam", ViewBag.DanhSachNam as SelectList, "-- Chọn năm --")
+
+        <input type="submit" value="Thống kê" />
+    </div>
+}
+
+<br />
+
+@if (ViewBag.SoLuongDonHang != null && ViewBag.TongDoanhThu != null)
+{
+    <div>
+        <p>Số lượng đơn hàng trong tháng và năm đã chọn: @ViewBag.SoLuongDonHang</p>
+        <p>Tổng doanh thu trong tháng và năm đã chọn: @ViewBag.TongDoanhThu</p>
+    </div>
+}

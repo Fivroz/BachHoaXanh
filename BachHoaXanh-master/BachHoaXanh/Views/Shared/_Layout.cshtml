@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/Styles/Image/logo.jpg" type="image/x-icon">
+    <title>Bách Hóa Xanh - @ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/Hover.css" rel="stylesheet" />
+    @Styles.Render("~/Styles/Fonts")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body style="background:#e9edf0">
+    <nav class="navbar navbar-expand-sm" style="background: #018846 !important; max-height: 70px;">
+        <ul class="mt-3 d-inline-flex container-fluid" style="list-style-type:none">
+            <li class="mdropdown pointer-event">
+                <div style="width:200px; margin-top:0px !important;height:50px;text-align:center">
+                    <p class="navbar-toggler-icon" style="margin-top:0.75rem!important"></p>
+                    <p class="d-inline-block">Danh mục sản phẩm</p>
+                    <ul class="mdropdown-i list-unstyled">
+                        <li>@Html.Action("LayDanhMuc", "Home")</li>
+                    </ul>
+                </div>
+            </li>
+            <li style="margin-left:1%">
+                <img style="cursor: pointer; max-height:70px" src="~/Styles/Image/logoBHX.png" onclick="location.href='@Url.Action("TrangChu", "Home")'" />
+            </li>
+            <li style="margin-right: 5%; margin-left: 15%; width:400px">
+
+                @using (Html.BeginForm("SearchByName", "Home", FormMethod.Get, new { @class = "form-inline" }))
+                {
+                    <div class="form-group">
+                        <input type="Text" class="form-control mx-sm-3" value="@ViewBag.Keyword" name="searchString" placeholder="Tìm kiếm tên sản phẩm">
+                    </div>
+                }
+
+            </li>
+            <li>
+                @if (Session["ID_USER"] == null)
+                {
+                    <a class="d-block btn nav-item mt-2 text-center" href="@Url.Action("Login", "Home")">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user" width="20" height="20">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <p>Tài khoản</p>
+                    </a>
+                }
+                @if (Session["ID_USER"] != null)
+                {
+                    <a style="text-decoration:none; color:aqua; font-size: 16px; text-align: center;" href="@Url.Action("Details","KhachHangs", new { id = @Session["ID_USER"] })">@Session["NAME_USER"]</a>
+                    @Html.ActionLink("Đăng Xuất", "logout", "Home", new { area = "" }, new { @class = "nav-link", style = "font-size: 16px; text-align: center;" })
+                }
+            </li>
+            <li style="margin-right: 2%; margin-left: 2%;">
+                @Html.Action("GioHangPartial", "Cart")
+            </li>
+        </ul>
+    </nav>
+
+
+
+
+    <div class="container-md" style="max-width:1080px; height:fit-content">
+        @RenderBody()
+    </div>
+    <footer class="card-footer" style=" left: 0; bottom: 0; width: 100%;">
+        <hr />
+        <div class="row" style="padding-left: 50px">
+            <div class="col-md-4 col-sm-6">
+                <h2>Bảo hành</h2>
+                <span>Chính sách mua hàng</span>
+                <br />
+                <span>Chính sách bảo hành</span>
+                <br />
+                <span>Trung tâm bảo hành</span>
+                <br />
+                <span>Tra cứu bảo hành</span>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h2>Liên kết</h2>
+                <span>Tổng đài: 1900.1908 - 028.3622.9900</span>
+                <br />
+                <span>Hệ thống 1.707 cửa hàng Bách Hóa Xanh</span>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h2>Thông tin</h2>
+                <span>Về chúng tôi</span>
+                <br />
+                <span>Liên hệ</span>
+                <br />
+                <span>Góp ý</span>
+                <br />
+                <span>Tra cứu</span>
+            </div>
+
+        </div>
+        <center> <p style="background: #018846; margin:0px">&copy; @DateTime.Now.Year - Bách Hóa Xanh</p></center>
+
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

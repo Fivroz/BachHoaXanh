@@ -1,0 +1,65 @@
+﻿@model BachHoaXanh.Models.KhachHang
+
+@{
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@using (Html.BeginForm("Create", "KDKhachHang", FormMethod.Post, new { id = "createUserForm" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group m-2">
+        @Html.LabelFor(model => model.HoTen,"Họ và tên", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.HoTen, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group m-2">
+        @*1: Nam, 0: Nữ*@
+        @Html.LabelFor(model => model.GioiTinh, "Giới tính:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.GioiTinh, true) Nam
+            </label>
+            <label class="radio-inline">
+                @Html.RadioButtonFor(model => model.GioiTinh, false) Nữ
+            </label>
+            @Html.ValidationMessageFor(model => model.GioiTinh, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group m-2">
+        @Html.LabelFor(model => model.SDT,"Số điện thoại", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.SDT, new { htmlAttributes = new { @class = "form-control", Required = "required", type="phone" } })
+            @Html.ValidationMessageFor(model => model.SDT, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group m-2">
+        @Html.LabelFor(model => model.DiaChi,"Địa chỉ", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group m-2">
+        @Html.LabelFor(model => model.MatKhau,"Mật khẩu", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class=" mt-2 text-center">
+        <input type="submit" value="Tạo khách hàng" class="btn btn-default w-50" style="background: #018846; color: white; width: 50%" />
+    </div>
+</div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,43 @@
+﻿@model BachHoaXanh.Models.NhaCungCap
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.MaNhaCC)
+
+    <div class="form-group m-1">
+        @Html.LabelFor(model => model.TenNhaCC, "Tên nhà cung cấp", htmlAttributes: new { @class = "control-label col-md-2 m-1" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TenNhaCC, new { htmlAttributes = new { @class = "form-control m-1 w-100", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.TenNhaCC, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group m-1">
+        @Html.LabelFor(model => model.SDT, "Số điện thoại nhà cung cấp", htmlAttributes: new { @class = "control-label col-md-2 m-1" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.SDT, new { htmlAttributes = new { @class = "form-control m-1 w-100", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.SDT, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group m-1">
+        @Html.LabelFor(model => model.DiaChi, "Địa chỉ nhà cung cấp", htmlAttributes: new { @class = "control-label col-md-2 m-1" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control m-1 w-100", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mt-2 text-center">
+        <input type="submit" value="Lưu lại" class="btn btn-default w-50" style="background: #018846; color: white; width: 50%" />
+    </div>
+</div>
+}
+

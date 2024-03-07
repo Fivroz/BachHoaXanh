@@ -1,0 +1,62 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div style="margin: 10px auto; width:100%">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <a href="@Url.Action("CTSanPham","Home", new {id = item.MaSanPham })"><img class="card-img-top" height="160px" src="~/Styles/Image/SanPham/@item.HinhSanPham" alt="Card image"></a>
+                    <div class="card-body" style="text-align: center">
+                        <div class="card-title" style="height:60px;width:100%;">@item.TenSanPham</div>
+                        <div class="d-inline">
+                            @if (item.GiamGia == 0)
+                            {
+                                <strong style=" color: #b10e0e; margin-right:2px">
+                                    @String.Format("{0:0,0}", @item.GiaNiemYet)₫
+                                </strong>
+                            }
+                            else
+                            {
+                                <strong style=" color: #b10e0e; margin-right:2px">
+                                    @String.Format("{0:0,0}", ((double)item.GiaNiemYet - ((double)item.GiaNiemYet * (double)item.GiamGia)))₫
+                                </strong>
+                                <span style=" color: #757575; text-decoration: line-through; font-weight: 300; margin-right: 2px">
+                                    @String.Format("{0:0,0}", @item.GiaNiemYet)₫
+                                </span>
+                                <label style=" vertical-align: middle; font-size: 12px; color: #fff; font-weight: 600; border-radius: 3px; background: #de2000; width: fit-content; height: 20px; line-height: 20px; text-align: center; margin-left: 2px;">
+                                    - @(item.GiamGia * 100)%
+                                </label>
+                            }
+                        </div>
+
+                        @if (item.TrangThai == "Hết hàng")
+                        {
+                            <button disabled class="d-block" style="text-decoration: none; font-size: 13px;width:100%; color: #008848; text-align: center; text-transform: uppercase; padding: 10px 0; margin-top: 3px; border-radius: 4px; border: 1px solid #008848;">
+                                chọn mua
+                            </button>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("AddProToCart", "Cart", new{ MaSP = item.MaSanPham })" onclick="addToCart()" class="d-block" style="text-decoration: none; font-size: 13px; color: #008848; text-align: center; text-transform: uppercase; padding: 10px 0; margin-top: 3px; cursor: pointer; border-radius: 4px; border: 1px solid #008848;">
+                                chọn mua
+                            </a>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<script>
+    function addToCart() {
+
+        // Hiển thị thông báo thành công
+        alert("Thêm vào giỏ hàng thành công!");
+    }
+</script>

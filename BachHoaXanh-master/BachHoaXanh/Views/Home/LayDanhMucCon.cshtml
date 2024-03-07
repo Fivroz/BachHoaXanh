@@ -1,0 +1,12 @@
+﻿@model IEnumerable<BachHoaXanh.Models.DanhMuc>
+
+
+<ul class="list-group" style="background-color:dimgrey !important">
+    @foreach (var item in Model)
+    {
+
+        <a href="@Url.Action("SanPhamTheoDM", "Home", new { id= item.MaDanhMuc })" class="list-group-item list-group-item-action" style="border:none !important">
+            @item.TenDanhMuc
+        </a>
+    }
+</ul>

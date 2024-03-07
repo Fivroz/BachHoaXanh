@@ -1,0 +1,156 @@
+﻿.mdropdown-i {
+    display: none;
+}
+
+.mdropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 16px;
+}
+
+    .mdropdown:hover {
+        background-color: #f1f1f1;
+        color: #ff0000;
+    }
+
+        .mdropdown:hover .mdropdown-i {
+            display: block;
+        }
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 8px;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.mdropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+}
+
+.mdropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+}
+
+
+.tr-type {
+    width: 100px;
+    font-size: 13px;
+    height: 20px;
+}
+
+container_grid {
+    display: grid;
+    grid-template-columns: 10% auto;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.container_grid_index {
+    display: grid;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 5%;
+    color: #f8fb1b;
+    grid-template-rows: 12.5% 12.5% 12.5% 12.5% 12.5% 25%;
+    grid-template-columns: 50% 50%;
+    min-height: 700px;
+    padding: 10px;
+    background-color: #018846;
+    border-radius: 10px;
+}
+
+
+.item {
+    background-color: white;
+    padding: 50px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.item_index {
+    text-align: left;
+    margin: 25px;
+    font-size: 20px;
+    background-color: #018846;
+}
+
+.item-title {
+    background-color: #92c47d;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.button-left {
+    border-radius: 10px;
+    position: relative;
+    right: 75%;
+    left: 25%;
+}
+
+.item-button {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+#successModal {
+    display: none; /* Ẩn modal mặc định */
+    position: fixed; /* Xác định vị trí tuyệt đối */
+    z-index: 1; /* Đảm bảo hiển thị trên các phần tử khác */
+    padding-top: 100px; /* Khoảng cách từ phần trên màn hình */
+    left: 0;
+    top: 0;
+    width: 100%; /* Không để lại khoảng trống */
+    height: 100%; /* Không để lại khoảng trống */
+    overflow: auto; /* Phân trang nếu nội dung quá dài */
+    background-color: rgba(0, 0, 0, 0.4); /* Dải mờ phủ lên nền */
+}
+
+    /* Kiểu dáng nội dung modal */
+    #successModal .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* Kiểu dáng tiêu đề modal */
+    #successModal .modal-header {
+        background-color: #f2f2f2;
+        padding: 10px;
+    }
+
+    /* Kiểu dáng nút đóng modal */
+    #successModal .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        /* Kiểu dáng nút đóng modal khi hover */
+        #successModal .close:hover,
+        #successModal .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    /* Kiểu dáng footer modal */
+    #successModal .modal-footer {
+        background-color: #f2f2f2;
+        padding: 10px;
+    }

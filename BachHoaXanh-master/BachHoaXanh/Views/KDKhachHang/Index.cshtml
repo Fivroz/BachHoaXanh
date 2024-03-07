@@ -1,0 +1,261 @@
+﻿@model IEnumerable<BachHoaXanh.Models.KhachHang>
+
+@{
+    ViewBag.Title = "Khách hàng";
+    Layout = "~/Views/Shared/_NVKD.cshtml";
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Danh sách khách hàng</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Thêm khách hàng</button>
+    </li>
+</ul>
+@if (Model.Count() == 0)
+{
+    <h4 style="text-align:center; margin:5px">Không có khách hàng</h4>
+}
+else
+{
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- Table with stripped rows -->
+                        <table class="table table-striped table-hover datatable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Họ tên</th>
+                                    <th scope="col">SĐT</th>
+                                    <th scope="col">Giới tính</th>
+                                    <th scope="col">Địa chỉ</th>
+                                    <th scope="col">Mật khẩu</th>
+                                    <th scope="col">Trạng thái</th>
+                                    <th scope="col">Hạng</th>
+                                    <th scope="col">Điểm</th>
+                                    <th scope="col">Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <th scope="row">@item.MaKhachHang</th>
+                                        <th scope="row"><a href=#>@item.HoTen</a></th>
+                                        <th scope="row">@item.SDT</th>
+                                        <th scope="row">
+                                            @{
+                                                if (item.GioiTinh)
+                                                {
+                                                    <text>Nam</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>Nữ</text>
+                                                }
+                                            }
+                                        </th>
+                                        <th scope="row">@item.DiaChi</th>
+                                        <th scope="row">@item.MatKhau</th>
+                                        <th scope="row">
+                                            @if (item.TrangThai == false)
+                                            {
+                                                <text>Hoạt động</text>
+                                            }
+                                            else
+                                            {
+                                                <text>Bị chặn</text>
+                                            }
+                                        </th>
+                                        <th scope="row">@item.HangKhachHang1.TenHangKhachHang</th>
+                                        <th scope="row">@item.DiemTichLuy</th>
+                                        <th scope="row">
+                                            <button class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "KDKhachHang", new { id = item.MaKhachHang })">Sửa</button>
+                                            @if (item.TrangThai == false)
+                                            {
+                                                <button class="block-user btn btn-danger" data-user-id="@item.MaKhachHang">Chặn</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="undo-user btn btn-secondary" data-user-id="@item.MaKhachHang">Hoạt động</button>
+                                            }
+                                        </th>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    }
+    @*Modal chặn*@
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Xác nhận chặn khách hàng</h5>
+                    <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn chặn khách hàng này?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancel">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Modal hoạt động*@
+    <div class="modal fade" id="undoModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Xác nhận hoạt động lại khách hàng</h5>
+                    <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn muốn hoạt động lại khách hàng này?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="button" class="btn btn-danger" id="confirmUndo">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Modal Create*@
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Thêm khách hàng mới</h5>
+                    <button type="button" class="btn-close d-inline" style="background-color: gray; border: 1px solid black" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="createModalFrame" scrolling="no" width="100%" height="500px" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*Modal Edit*@
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Chỉnh sửa thông tin khách hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="editModalFrame" scrolling="no" width="100%" height="500px" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+        <script>
+    $(document).ready(function () {
+            $(".block-user").click(function () {
+                var orderId = $(this).data("user-id");
+                $("#confirmCancel").data("user-id", orderId);
+                $("#cancelModal").modal("show");
+            });
+
+            $("#confirmCancel").click(function () {
+                var orderId = $(this).data("user-id");
+                // Gửi request lên server để cập nhật trạng thái của đơn hàng thành "Chặn khách hàng"
+                $.ajax({
+                    url: "@Url.Action("BlockUser", "KDKhachHang")", // Đường dẫn tới phương thức xử lý việc chặn
+                    type: "POST",
+                    data: {
+                        id: orderId
+                    },
+                    success: function () {
+                        // Xử lý thêm logic tại đây sau khi chặn thành công
+                        alert("Chặn khách hàng thành công!");
+                        // Reload trang để cập nhật danh sách khách hàng
+                        location.reload();
+                    },
+                    error: function () {
+                        // Xử lý thêm logic tại đây khi có lỗi xảy ra khi chặn khách hàng
+                        alert("Đã xảy ra lỗi khi chặn. Vui lòng thử lại sau.");
+                    }
+                });
+
+                $("#cancelModal").modal("hide");
+            });
+        });
+
+    $(document).ready(function () {
+            $(".undo-user").click(function () {
+                var userId = $(this).data("user-id");
+                $("#confirmUndo").data("user-id", userId);
+                $("#undoModal").modal("show");
+            });
+
+        $("#confirmUndo").click(function () {
+                var userId = $(this).data("user-id");
+                // Gửi request lên server để cập nhật trạng thái của đơn hàng thành "Chặn khách hàng"
+                $.ajax({
+                    url: "@Url.Action("UndoUser", "KDKhachHang")", // Đường dẫn tới phương thức xử lý việc chặn
+                    type: "POST",
+                    data: {
+                        id: userId
+                    },
+                    success: function () {
+                        // Xử lý thêm logic tại đây sau khi chặn thành công
+                        alert("Hoạt động lại khách hàng thành công!");
+                        // Reload trang để cập nhật danh sách khách hàng
+                        location.reload();
+                    },
+                    error: function () {
+                        // Xử lý thêm logic tại đây khi có lỗi xảy ra khi chặn khách hàng
+                        alert("Đã xảy ra lỗi khi thay đổi. Vui lòng thử lại sau.");
+                    }
+                });
+
+                $("#cancelModal").modal("hide");
+            });
+        });
+    $(document).ready(function () {
+            $(".open-modal").click(function () {
+                var url = $(this).data("url");
+                $("#editModalFrame").attr("src", url);
+                $("#editModal").modal("show");
+            });
+            $("#editModal").on("hidden.bs.modal", function () {
+                location.reload();
+            });
+    });
+
+
+      $(document).ready(function () {
+            // Open the create modal when the button is clicked
+            $("#profile-tab").click(function () {
+                var url = "@Url.Action("Create", "KDKhachHang")";
+                $("#createModalFrame").attr("src", url);
+                $("#createModal").modal("show");
+            });
+             $("#createModal").on("hidden.bs.modal", function () {
+                 location.reload();
+             });
+         });
+        </script>
+    }

@@ -1,0 +1,48 @@
+﻿@model BachHoaXanh.Models.KhachHang
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("Login", "Home"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mt-1" })
+
+    <div class="rounded bg-white m-4" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top:20px">
+        <h2 class="m-2 text-center">Đăng nhập tài khoản</h2>
+        <div style="margin-bottom: 20px;" class="justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+            </svg> Số điện thoại
+            @Html.TextBoxFor(model => model.SDT, new { @class = "form-control", placeholder = "Số điện thoại" })
+            @Html.ValidationMessageFor(model => model.SDT, "", new { @class = "text-danger" })
+        </div>
+
+        <div style="margin-bottom: 10px;" class="justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+            </svg> Mật khẩu
+            @Html.PasswordFor(model => model.MatKhau, new { @class = "form-control", placeholder = "Mật khẩu" })
+            @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+            @if (ViewBag.ERROR != null)
+            {
+                <p>@ViewBag.ERROR</p>
+            }
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+        </div>
+
+        <div>
+            <a href="@Url.Action("DangKy", "KhachHangs")" class="btn text-decoration-none">Chưa có tài khoản?</a>
+        </div>
+    </div>
+}
+@if (@Session["DANGKY"] != null)
+{
+    // Hiển thị thông báo alert
+    <script>alert('Đăng ký tài khoản thành công');</script>
+}

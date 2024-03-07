@@ -1,0 +1,125 @@
+﻿@model IEnumerable<BachHoaXanh.Models.SanPham>
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/css/banner.css" rel="stylesheet" />
+    <!--hiển thị banner-->
+<div  class="rounded bg-white mt-4">
+    <div style="justify-content: center;" id="body-banner">
+        <div class="img-slider" style="width: 100%;">
+            <div class="slide active">
+                <img style="width: 100%; height: 200px; " src="~/Content/imgs/1.jpg" alt="ảnh 1"> <!--đặc lại link ảnh này chưa có ảnh -->
+                <!--<div class="info">
+                    <h2>Cún Con</h2>-->
+                <!-- hiển thị tiêu đề thông tin của ảnh -->
+                <!--<p>hãy để gia đình bạn hạnh phúc hơn khi có thêm thành viên mới !tới đây và chọn một bé cún nào !.</p>
+                </div>-->
+            </div>
+            <div style="" class="slide">
+                <img style="width: 100%; height: 200px; " src="~/Content/imgs/2.jpg" alt="ảnh 2">
+            </div>
+            <div class="slide">
+                <img style="width: 100%; height: 200px; " src="~/Content/imgs/3.jpg" alt="ảnh 3">
+            </div>
+            <div class="slide">
+                <img style="width: 100%; height: 200px; " src="~/Content/imgs/4.jpg" alt="ảnh 4">
+            </div>
+            <div class="slide">
+                <img style="width: 100%; height: 200px; " src="~/Content/imgs/5.jpg" alt="ảnh 5">
+            </div>
+            <!--hiển thị nút bấm chuyển slide-->
+            <div class="navigation">
+                <div class="btn active"></div>
+                <div class="btn"></div>
+                <div class="btn"></div>
+                <div class="btn"></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px">
+        <h5 style="background: #6f9972; color: white; padding:1%; font-weight:500; text-transform:uppercase; font-family:Arial">Thương hiệu nổi bật</h5>
+        @Html.Action("ChonThuongHieu", "ThuongHieus")
+    </div>
+    <div style="margin-top: 20px">
+        <h5 style="background: #6f9972; color: white; padding:1%; font-weight:500; text-transform:uppercase; font-family:Arial">Sản phẩm bán chạy</h5>
+        @Html.Action("SanPhamBanChay", "SanPhams")
+    </div>
+    <div style="margin-top: 20px">
+        <h5 style="background: #6f9972; color: white; padding:1%; font-weight:500; text-transform:uppercase; font-family:Arial">Thịt, cá, trứng, hải sản</h5>
+        @Html.Action("Sp_ThitCa", "SanPhams")
+    </div>
+    <div style="margin-top: 20px">
+        <h5 style="background: #6f9972; color: white; padding:1%; font-weight:500; text-transform:uppercase; font-family:Arial">Rau, củ, nấm, trái cây</h5>
+        @Html.Action("Sp_RauCu", "SanPhams")
+    </div>
+    <div style="margin-top:20px">
+        <h5 style="background: #6f9972; color: white; padding:1%; font-weight:500; text-transform:uppercase; font-family:Arial">Tất cả sản phẩm</h5>
+        @Html.Action("Index", "Home")
+    </div>
+</div>
+
+<!--phần js của banner -->
+<script type="text/javascript">
+    var slides = document.querySelectorAll('.slide'); // lấy 2 class slide và bnt
+    var btns = document.querySelectorAll('.btn');
+    let currentSlide = 1;
+
+    // Javascript for image slider manual navigation
+
+    // slide tự động chuyển
+    var manualNav = function (manual) {
+        slides.forEach((slide) => {
+            slide.classList.remove('active');
+
+            btns.forEach((btn) => {
+                btn.classList.remove('active');
+            });
+        });
+
+        slides[manual].classList.add('active');
+        btns[manual].classList.add('active');
+    }
+
+    // phần bấm slide
+    btns.forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+            manualNav(i);
+            currentSlide = i;
+        });
+    });
+
+    // Javascript for image slider autoplay navigation
+    var repeat = function (activeClass) {
+        let active = document.getElementsByClassName('active');
+        let i = 1;
+
+        var repeater = () => {
+            setTimeout(function () {
+                [...active].forEach((activeSlide) => {
+                    activeSlide.classList.remove('active');
+                });
+
+                slides[i].classList.add('active');
+                btns[i].classList.add('active');
+                i++;
+                // duyệt để slide chuyển
+                if (slides.length == i) {
+                    i = 0;
+                }
+                // reset lại 1
+                if (i >= slides.length) {
+                    return;
+                }
+                repeater();
+            }, 5000); // số thời gian  slide tự chuyển là 5s
+        }
+        repeater();
+    }
+    repeat();
+
+
+
+</script>

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<BachHoaXanh.Models.LoaiDanhMuc>
+
+<link href="~/Content/Hover.css" rel="stylesheet" />
+
+<div class="list-group" style="border:none !important">
+    @foreach (var item in Model)
+    {
+        <div class="list-group-item list-group-item-action" style="border:none !important" onclick="toggleSubMenu(this)">
+            <span class="menu-label">@item.TenLoaiDanhMuc</span>
+            <ul class="m-dropdown-menu list-unstyled" style="display: none">
+                <li style="background-color:dimgrey">
+                    @Html.Partial("LayDanhMucCon", item.DanhMucs.Where(dm => dm.MaLoaiDanhMuc == item.MaLoaiDanhMuc))
+                </li>
+            </ul>
+        </div>
+    }
+</div>
+
+<script>
+    function toggleSubMenu(element) {
+        var subMenu = element.querySelector('.m-dropdown-menu');
+        subMenu.style.display = (subMenu.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
+
+

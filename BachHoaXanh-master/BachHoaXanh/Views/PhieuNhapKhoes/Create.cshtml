@@ -1,0 +1,230 @@
+﻿@model BachHoaXanh.Models.PhieuNhapKho
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_NVKD.cshtml";
+}
+<a class="bx bx-left-arrow-alt btn btn-light" href="@Url.Action("Index", "PhieuNhapKhoes")" style="color: black">Quay về</a>
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <h3 class="text-center">Tạo phiếu nhập kho</h3>
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MaNhaCC, "Nhà cung cấp", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("MaNhaCC", null, htmlAttributes: new { @class = "form-control", name = "MaNhaCC" })
+                        @Html.ValidationMessageFor(model => model.MaNhaCC, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group mt-1">
+                    <label class="control-label">Chọn sản phẩm</label>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="product-name-input form-control" name="productName">
+                                <option value="">Chọn sản phẩm</option>
+                                @foreach (var product in ViewBag.ProductList)
+                                {
+                                    <option value="@product.MaSanPham">@product.MaSanPham - @product.TenSanPham</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="quantity-input form-control" placeholder="Số lượng" name="quantity">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="price-input form-control" placeholder="Giá nhập" name="price" step="0.01">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-info" type="button" id="add-product-button" onclick="addProduct()">Thêm sản phẩm</button>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="control-label mt-1">Danh sách sản phẩm nhập</label>
+                <div id="product-list"></div>
+
+                <div class="form-group mt-2 text-xl-center">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" style="background: #018846; color: white; border: none;" value="Tạo phiếu nhập kho" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var productList = [];
+
+    function addProduct() {
+        // Lấy thông tin về sản phẩm từ các trường đã nhập
+        var productName = $(".product-name-input").val();
+        var quantity = $(".quantity-input").val();
+        var price = $(".price-input").val();
+        if (productName === null || productName === "") {
+            alert("Hãy chọn sản phẩm");
+            return;
+        }
+        if (quantity === null || price === null || quantity === "" || price === "") {
+            alert("Hãy thêm giá trị vào ^^");
+            return;
+        }
+        if (parseFloat(quantity) < 0 || parseFloat(price) < 0) {
+            alert("Hãy nhập giá trị không âm ^^");
+            return;
+        }
+        var existingProduct = productList.find(function (product) {
+            return product.name === productName;
+        });
+        if (existingProduct) {
+            alert("Sản phẩm đã tồn tại trong danh sách!");
+            return;
+        }
+
+        else {
+            // Thêm sản phẩm vào danh sách
+            productList.push({
+                name: productName,
+                quantity: quantity,
+                price: price
+            });
+            // Tạo các phần tử HTML để hiển thị thông tin sản phẩm ngang và có thể chỉnh sửa
+            var productHtml = '<div class="row" style="margin-top: 1%">';
+            productHtml += '<div class="col-md-4">';
+            productHtml += '<input type="text" value="' + productName + '" class="form-control product-name-input" name="productName" disabled/>';
+            productHtml += '</div>';
+            productHtml += '<div class="col-md-2">';
+            productHtml += '<input type="number" value="' + quantity + '" class="form-control quantity-input" name="quantity" />';
+            productHtml += '</div>';
+            productHtml += '<div class="col-md-2">';
+            productHtml += '<input type="number" value="' + price + '" class="form-control price-input" name="price" />';
+            productHtml += '</div>';
+            productHtml += '<div class="input-group-append col-md-2">';
+            productHtml += '<button type="button" onclick="editProduct(this)" class="btn btn-primary edit-button">Sửa</button>';
+            productHtml += '<button type="button" onclick="deleteProduct(this)" class="btn btn-danger delete-button" style="margin-left:10%">Xóa</button>';
+            productHtml += '</div>';
+            productHtml += '</div>';
+
+            // Thêm sản phẩm vào danh sách
+            $("#product-list").append(productHtml);
+            alert("Thêm sản phẩm thành công ^^");
+        }
+    }
+
+    // Xử lý sự kiện khi nhấn vào nút "Sửa"
+    // Xử lý sự kiện khi nhấn vào nút "Sửa"
+    function editProduct(button) {
+        var productDiv = button.parentNode.parentNode;
+        var productName = productDiv.querySelector(".product-name-input").value;
+        var quantity = productDiv.querySelector(".quantity-input").value;
+        var price = productDiv.querySelector(".price-input").value;
+        if (quantity === null || price === null || quantity === "" || price === "") {
+            alert("Hãy thêm giá trị vào ^^");
+            return;
+        }
+        if (parseFloat(quantity) < 0 || parseFloat(price) < 0) {
+            alert("Hãy nhập giá trị không âm ^^");
+            return;
+        }
+        else {
+            // Cập nhật thông tin sản phẩm
+            productDiv.innerHTML = '<div class="col-md-4">' +
+                '<input type="text" value="' + productName + '" class="form-control product-name-input" name="productName" disabled />' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                '<input type="number" value="' + quantity + '" class="form-control quantity-input" name="quantity" />' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                '<input type="number" value="' + price + '" class="form-control price-input" name="price" step="0.01" />' +
+                '</div>' +
+                '<div class="input-group-append col-md-2">' +
+                '<button type="button" onclick="saveProduct(this)" class="btn btn-success save-button">Lưu</button>' +
+                '<button type="button" onclick="deleteProduct(this)" class="btn btn-danger delete-button" style="margin-left: 3%">Xóa</button>' +
+                '</div>';
+
+            alert("Lưu thành công ^^");
+
+        }
+    }
+
+    // Xử lý sự kiện khi nhấn vào nút "Lưu"
+    function saveProduct(button) {
+        var productDiv = button.parentNode.parentNode;
+        var productName = productDiv.querySelector(".product-name-input").value;
+        var quantity = productDiv.querySelector(".quantity-input").value;
+        var price = productDiv.querySelector(".price-input").value;
+
+        // Cập nhật thông tin sản phẩm
+        productDiv.innerHTML = '<div class="col-md-4">' +
+            '<input type="text" value="' + productName + '" class="form-control product-name-input" name="productName" disabled />' +
+            '</div>' +
+            '<div class="col-md-2">' +
+            '<input type="number" value="' + quantity + '" class="form-control quantity-input"  name="quantity" disabled />' +
+            '</div>' +
+            '<div class="col-md-2">' +
+            '<input type="number" value="' + price + '" class="form-control price-input" name="price" step="0.01" disabled />' +
+            '</div>' +
+            '<div class="input-group-append col-md-2">' +
+            '<button type="button" onclick="editProduct(this)" class="btn btn-primary edit-button">Sửa</button>' +
+            '<button type="button" onclick="deleteProduct(this)" class="btn btn-danger delete-button" style="margin-left: 3%">Xóa</button>' +
+            '</div>';
+    }
+    // Xử lý sự kiện khi nhấn vào nút "Xóa"
+    function deleteProduct(button) {
+        var productDiv = button.parentNode.parentNode;
+
+        var productName = productDiv.querySelector(".product-name-input").value;
+
+        // Xóa sản phẩm khỏi productList
+        var index = productList.findIndex(function (product) {
+            return product.name === productName;
+        });
+        if (index !== -1) {
+            productList.splice(index, 1);
+        }
+        productDiv.remove();
+        alert("Đã xóa sản phẩm");
+    }
+
+    // Xử lý sự kiện khi nhấn vào nút "Tạo phiếu nhập kho"
+    $("form").submit(function (event) {
+        event.preventDefault(); // Ngăn chặn gửi form mặc định
+
+        // Tạo một đối tượng FormData để gửi dữ liệu form
+        var formData = new FormData(this);
+
+        // Lấy danh sách chi tiết phiếu nhập kho từ các phần tử đã được thêm
+        var products = $("#product-list .row");
+        products.each(function (index, product) {
+            var productName = $(product).find(".product-name-input").val();
+            var quantity = $(product).find(".quantity-input").val();
+            var price = $(product).find(".price-input").val();
+
+            // Thực hiện các thao tác khác với dữ liệu của từng sản phẩm ở đây
+
+            formData.append("productNames[" + index + "]", productName);
+            formData.append("quantities[" + index + "]", quantity);
+            formData.append("prices[" + index + "]", price);
+        });
+        // Gửi Ajax request để tạo phiếu nhập kho
+        $.ajax({
+            url: "/PhieuNhapKhoes/Create",
+            type: "POST",
+            data: formData,
+            contentType: false, // Không xử lý kiểu dữ liệu
+            processData: false, // Không xử lý dữ liệu formData
+            success: function (response) {
+                alert("Tạo phiếu thành công!");
+                window.location.href = "Index"
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+            }
+        });
+    });
+</script>

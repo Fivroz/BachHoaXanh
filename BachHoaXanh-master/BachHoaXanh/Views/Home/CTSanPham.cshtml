@@ -1,0 +1,145 @@
+﻿@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+@model BachHoaXanh.Models.SanPham
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<div class="rounded-1" style="margin: 10px auto; width: 80%; background: white;">
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <img class="img-fluid" src="~/Styles/Image/SanPham/@Model.HinhSanPham">
+        </div>
+        <div class="col-md-4">
+            <h4 class="mt-3">@Model.TenSanPham</h4>
+            <div class="d-inline mt-3">
+                @if (Model.GiamGia == 0)
+                {
+                    <strong style=" color: #b10e0e; margin-right:2px">
+                        @String.Format("{0:N0}", @Model.GiaNiemYet)₫
+                    </strong>
+                }
+                else
+                {
+                    <strong style=" color: #b10e0e; margin-right:2px">
+                        @String.Format("{0:N0}", ((double)Model.GiaNiemYet - ((double)Model.GiaNiemYet * (double)Model.GiamGia)))₫
+                    </strong>
+                    <span style=" color: #757575; text-decoration: line-through; font-weight: 300; margin-right: 2px">
+                        @String.Format("{0:N0}", @Model.GiaNiemYet)₫
+                    </span>
+                    <label style=" vertical-align: middle; font-size: 12px; color: #fff; font-weight: 600; border-radius: 3px; background: #de2000; width: fit-content; height: 20px; line-height: 20px; text-align: center; margin-left: 2px;">
+                        - @(Model.GiamGia * 100)%
+                    </label>
+                }
+            </div>
+
+            @if (Model.TrangThai == "Hết hàng")
+            {
+                <button href="@Url.Action("AddProToCart", "Cart", new { MaSP = Model.MaSanPham })" disabled="disabled" class="btn btn-success mt-5 m-lg-2 d-block" style="width: 50%; align-self: center;">
+                    CHỌN MUA
+                </button>
+                <div class="d-inline text-danger">Tạm hết hàng</div>
+            }
+            else
+            {
+                <a href="@Url.Action("AddProToCart", "Cart", new { MaSP = Model.MaSanPham })" class="btn btn-success mt-5 m-lg-2 d-block" style="width: 50%; align-self: center;" onclick="addToCart()">
+                    CHỌN MUA
+                </a>
+            }
+        </div>
+    </div>
+    <hr>
+    <h4 class="mt-2">Thông tin sản phẩm</h4>
+    <div class="col-md-9 m-lg-2">
+        <table class="table table-striped">
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Mô tả:</td>
+                <td>@Model.MoTa</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Khối lượng:</td>
+                <td>@Model.KhoiLuong gam</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Dung tích:</td>
+                <td>@Model.DungTich</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Thành phần:</td>
+                <td>@Model.ThanhPhan</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Cách dùng:</td>
+                <td>@Model.CachDung</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Bảo quản:</td>
+                <td>@Model.BaoQuan</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Thương hiệu:</td>
+                <td>@Model.ThuongHieu.TenThuongHieu</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Nơi sản xuất:</td>
+                <td>@Model.NoiSanXuat</td>
+            </tr>
+            <tr>
+                <td class="tr-type" style="font-size:16px; font-weight:bold; margin-left: 5px; width: 20%">Lưu ý</td>
+                <td>@Model.LuuY</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-9 m-lg-2 mt-5">
+        <h4>Danh sách đánh giá trước đó</h4>
+        <div class="row">
+            @foreach (var item in Model.ChiTietDanhGias)
+            {
+                <div class="row m-1">
+
+                    <a style="width:fit-content"><img src="~/Styles/Image/@item.HinhDanhGia" style="height: 80px; width: 80px; margin: 5px;"></a>
+                    <div class="col-6" style="margin-top: 5px;">
+                        <h6>@item.SaoDanhGia</h6>
+                        <h6>@item.BinhLuan</h6>
+                        <h6>@item.DanhGiaSanPham.ThoiGian</h6>
+                        <h6>@item.DanhGiaSanPham.LuotThich</h6>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-9 m-lg-2 mt-5">
+        <h4>Đánh giá sản phẩm</h4>
+        <form>
+            <div class="form-group">
+                <label for="rating">Đánh giá:</label>
+                <select class="form-control" id="rating" name="rating">
+                    <option value="1">1 sao</option>
+                    <option value="2">2 sao</option>
+                    <option value="3">3 sao</option>
+                    <option value="4">4 sao</option>
+                    <option value="5">5 sao</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment">Bình luận:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="image">Hình ảnh:</label>
+                <input type="file" class="form-control-file" id="image" name="image">
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </form>
+    </div>
+
+
+</div>
+
+<script>
+    function addToCart() {
+
+        // Hiển thị thông báo thành công
+        alert("Thêm vào giỏ hàng thành công!");
+    }
+</script>

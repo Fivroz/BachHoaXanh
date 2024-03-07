@@ -1,0 +1,282 @@
+﻿@{ 
+    ViewBag.Title = "Khách hàng";
+}
+@model BachHoaXanh.Models.KhachHang
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/Hover.css" rel="stylesheet" />
+<div style="margin: 10px auto; width: 80%;">
+    <div style="font-size:24px">
+        @*1 nam 2 nữ*@
+        @{
+            if (Model.GioiTinh)
+            {
+                <p style="display:inline">Anh <span style="color:green">@Model.HoTen</span></p>
+            }
+            else
+            {
+                <p style="display:inline">Chị <span style="color:green">@Model.HoTen</span></p>
+            }
+        }
+        <i id="level-info" class='bx bx-coin-stack' style=" color: gold; margin-left: 30px; cursor:pointer">
+            <a style="text-decoration: none; color: black;">
+                Hạng: <span style="color:dodgerblue">@Model.HangKhachHang1.TenHangKhachHang</span>
+            </a>
+
+        </i>
+        <span id="loyalty-points" style="display: none; margin-left: 30%; margin-top: 2%; font-size: 18px; color: dodgerblue">
+            Điểm tích lũy: @Model.DiemTichLuy
+        </span>
+
+    </div>
+    <div style="margin-top: 40px;">
+        <button class="btn btn-primary open-modal" data-url="@Url.Action("Edit", "KhachHangs", new { id = Model.MaKhachHang })"><span>Thông tin cá nhân</span></button>
+        <a href="@Url.Action("Logout", "Home")" class="bx bx-exit text-decoration-none" style="float: right; font-family:Arial"><span>Thoát tài khoản</span></a>
+    </div>
+    <hr>
+    <div class="container rounded bg-white">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Lịch sử đặt hàng</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered-tab-pane" type="button" role="tab" aria-controls="delivered-tab-pane" aria-selected="false">Các đơn đã giao</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="voucher-tab" data-bs-toggle="tab" data-bs-target="#voucher-tab-pane" type="button" role="tab" aria-controls="voucher-tab-pane" aria-selected="false">Phiếu mua hàng</button>
+            </li>
+        </ul>
+
+        <div class="tab-content p-2">
+            <div class="tab-pane fade show active bg-white" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                @if (Model.DonDatHangs.Where(s => s.TrangThaiDonHang.ToLower() != "đã giao hàng").Count() == 0)
+                {
+                    <p>Bạn chưa có đơn đặt hàng nào mới</p>
+                }
+                else
+                {
+                    foreach (var item in Model.DonDatHangs.Where(s => s.TrangThaiDonHang.ToLower() != "đã giao hàng"))
+                    {
+                        <div class="card list-unstyled h-auto mb-2">
+                            <ul style="margin: 10px; list-style:none">
+                                <li>Mã đơn hàng: @item.MaDonHang</li>
+                                <li>@item.NgayDat.ToString("HH 'giờ' mm 'phút, ' 'ngày' dd/MM/yyyy")</li>
+                                @if (item.TrangThaiDonHang.ToLower() != "hủy đơn hàng" && item.TrangThaiDonHang.ToLower() != "đang giao hàng" && item.TrangThaiDonHang.ToLower() != "đã giao hàng")
+                                {
+                                    <li><button style="position: absolute; right: 10px; top: 40px;" class="cancel-order btn btn-danger" data-order-id="@item.MaDonHang">Hủy đơn hàng</button></li>
+                                }
+                                <li>
+                                    <div style="position: absolute; right: 10px; top: 10px">Trạng thái: <strong style="color:red">@item.TrangThaiDonHang</strong></div>
+                                </li>
+                            </ul>
+                            <div class="row" style="margin-top: 2%;">
+                                <div class="col-lg-6">
+                                    <div class="list-group-item list-group-item-action rounded btn text-center dropdown-toggle" style=" color: white; margin: 5%; width: fit-content; background: #018846; border: none !important" onclick="toggleSubMenu(this)">
+                                        Danh sách sản phẩm
+                                        <ul class="m-dropdown-menu list-unstyled" style="width: 100%; display:none">
+                                            <li>
+                                                @foreach (var sp in item.ChiTietDatHangs)
+                                                {
+                                                    <div class="row m-1">
+                                                        <a style="width:fit-content" href="@Url.Action("CTSanPham", "Home", new { id = sp.MaSanPham })"><img src="~/Styles/Image/SanPham/@sp.SanPham.HinhSanPham" style="height: 80px; width: 80px; margin: 5px;"></a>
+                                                        <div class="col-6" style="margin-top: 5px;">
+                                                            <h6>@sp.SanPham.TenSanPham</h6>
+                                                            <h6>Số lượng: @sp.SoLuong</h6>
+                                                            <h6>Thành tiền:  @String.Format("{0:N0}", @sp.ThanhTien)₫</h6>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" style="text-align:right">
+                                    <div style="margin-right:3%">
+                                        <p>Phương thức thanh toán: @item.PhuongThucThanhToan1.TenPhuongThuc</p>
+                                        <p>Phí giao hàng: @String.Format("{0:N0}", @item.PhiGiaoHang1.GiaPhi)₫</p>
+                                        <p>Tổng tiền:  @String.Format("{0:N0}", @item.TongTien)₫</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="tab-content p-2">
+            <div class="tab-pane fade bg-white" id="delivered-tab-pane" role="tabpanel" aria-labelledby="delivered-tab" tabindex="0">
+                @if (Model.DonDatHangs.Where(s => s.TrangThaiDonHang.ToLower() == "đã giao hàng").Count() == 0)
+                {
+                    <p>Không có đơn hàng đã giao</p>
+                }
+                else
+                {
+                    foreach (var item in Model.DonDatHangs.Where(s => s.TrangThaiDonHang == "Đã giao hàng"))
+                    {
+                        <div class="card list-unstyled h-auto mb-2">
+                            <ul style="margin: 10px; list-style:none">
+                                <li>Mã đơn hàng: @item.MaDonHang</li>
+                                <li>@item.NgayDat.ToString("HH 'giờ' mm 'phút, ' 'ngày' dd/MM/yyyy")</li>
+                                @if (item.TrangThaiDonHang.ToLower() != "hủy đơn hàng" && item.TrangThaiDonHang.ToLower() != "đang giao hàng" && item.TrangThaiDonHang.ToLower() != "đã giao hàng")
+                                {
+                                    <li><button style="position: absolute; right: 10px; top: 40px;" class="cancel-order btn btn-danger" data-order-id="@item.MaDonHang">Hủy đơn hàng</button></li>
+                                }
+                                <li>
+                                    <div style="position: absolute; right: 10px; top: 10px">Trạng thái: <strong style="color:red">@item.TrangThaiDonHang</strong></div>
+                                </li>
+                            </ul>
+                            <div class="row" style="margin-top: 2%;">
+                                <div class="col-lg-8">
+                                    <div class="list-group-item list-group-item-action rounded btn text-center dropdown-toggle" style=" color: white; margin: 5%; width: fit-content; background: #018846; border: none !important" onclick="toggleSubMenu(this)">
+                                        Danh sách sản phẩm
+                                        <ul class="m-dropdown-menu list-unstyled" style="width: 100%; display:none">
+                                            <li>
+                                                @foreach (var sp in item.ChiTietDatHangs)
+                                                {
+                                                    <div class="row m-1">
+                                                        <a style="width:fit-content" href="@Url.Action("CTSanPham", "Home", new { id = sp.MaSanPham })"><img src="~/Styles/Image/SanPham/@sp.SanPham.HinhSanPham" style="height: 80px; width: 80px; margin: 5px;"></a>
+                                                        <div class="col-6" style="margin-top: 5px;">
+                                                            <h6>@sp.SanPham.TenSanPham</h6>
+                                                            <h6>Số lượng: @sp.SoLuong</h6>
+                                                            <h6>Thành tiền:  @String.Format("{0:N0}", @sp.ThanhTien)</h6>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="text-align:right">
+                                    <div style="margin-right:3%">
+                                        <p>Phương thức thanh toán: @item.PhuongThucThanhToan1.TenPhuongThuc</p>
+                                        <p>Phí giao hàng: @String.Format("{0:N0}", @item.PhiGiaoHang1.GiaPhi) đồng</p>
+                                        <p>Tổng tiền:  @String.Format("{0:N0}", @item.TongTien) đồng</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="tab-content p-2">
+            <div class="tab-pane fade bg-white" id="voucher-tab-pane" role="tabpanel" aria-labelledby="voucher-tab" tabindex="0">
+                @if (Model.Voucher_KhachHang.Count()==0)
+                {
+                    <p>Bạn không có phiếu mua hàng</p>
+                }
+                else
+                {
+                    foreach (var item in Model.DonDatHangs)
+                    {
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+
+
+@*Modal Edit*@
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Chỉnh sửa thông tin cá nhân</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="editModalFrame" scrolling="no" width="100%" height="500px" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal HuyDon*@
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Xác nhận hủy đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn hủy đơn hàng này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script>
+            // Lắng nghe sự kiện click vào button trong footer
+            $(document).ready(function () {
+                $(".open-modal").click(function () {
+                    var url = $(this).data("url");
+                    $("#editModalFrame").attr("src", url);
+                    $("#editModal").modal("show");
+                });
+                $("#editModal").on("hidden.bs.modal", function () {
+                    location.reload();
+                });
+            });
+
+            //Menu sp
+            function toggleSubMenu(element) {
+                var subMenu = element.querySelector('.m-dropdown-menu');
+                subMenu.style.display = (subMenu.style.display === 'none') ? 'block' : 'none';
+            }
+
+
+            //Huy don
+            $(document).ready(function () {
+                $(".cancel-order").click(function () {
+                    var orderId = $(this).data("order-id");
+                    $("#confirmCancel").data("order-id", orderId);
+                    $("#cancelModal").modal("show");
+                });
+
+                $("#confirmCancel").click(function () {
+                    var orderId = $(this).data("order-id");
+                    // Gửi request lên server để cập nhật trạng thái của đơn hàng thành "Hủy đơn hàng"
+                    $.ajax({
+                        url: "@Url.Action("CancelOrder","DonDatHangs")", // Đường dẫn tới phương thức xử lý việc hủy đơn hàng
+                        type: "POST",
+                        data: {
+                            orderId: orderId
+                        },
+                        success: function () {
+                            // Xử lý thêm logic tại đây sau khi hủy đơn hàng thành công
+                            alert("Đơn hàng đã được hủy thành công.");
+                            // Reload trang để cập nhật danh sách đơn hàng
+                            location.reload();
+                        },
+                        error: function () {
+                            // Xử lý thêm logic tại đây khi có lỗi xảy ra khi hủy đơn hàng
+                            alert("Đã xảy ra lỗi khi hủy đơn hàng. Vui lòng thử lại sau.");
+                        }
+                    });
+
+                    $("#cancelModal").modal("hide");
+                });
+            });
+            // điểm tích lũy
+            $(document).ready(function () {
+                $("#level-info").click(function () {
+                    $("#loyalty-points").toggle();
+                });
+            });
+
+    </script>
+}

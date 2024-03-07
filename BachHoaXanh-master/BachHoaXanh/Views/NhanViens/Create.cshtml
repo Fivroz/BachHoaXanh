@@ -1,0 +1,68 @@
+﻿@model BachHoaXanh.Models.NhanVien
+
+@{
+    ViewBag.Title = "Thêm nhân viên";
+    Layout = "~/Views/Shared/_NVIT.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Thêm nhân viên</h5>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <form class="row">
+                <div class="col-md-6">
+                    <label for="inputName5" class="form-label">Họ tên</label>
+                    @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.HoTen, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @*1: Nam, 0: Nữ*@
+                    @Html.LabelFor(model => model.GioiTinh, "Giới tính:", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.GioiTinh, true) Nam
+                        </label>
+                        <label class="radio-inline">
+                            @Html.RadioButtonFor(model => model.GioiTinh, false) Nữ
+                        </label>
+                        @Html.ValidationMessageFor(model => model.GioiTinh, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="inputEmail5" class="form-label">Tài khoản</label>
+                    @Html.EditorFor(model => model.SDT, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.SDT, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label for="inputPassword5" class="form-label">Mật khẩu</label>
+                    @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label for="inputAddress5" class="form-label">Địa chỉ</label>
+                    @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                </div>             
+                <div class="col-md-6">
+                    <label for="inputAddress2" class="form-label">Vai trò</label>
+                    @Html.DropDownList("VaiTro", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.VaiTro, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6 d-none">
+                    <label for="inputCity" class="form-label">Trạng thái</label>
+                    @Html.EditorFor(model => model.TrangThai)
+                    @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger" })
+                </div>
+                <div >
+                    <button type="submit" style="background: #018846; color:white" class="btn col-md-3 rounded mt-2">Đăng ký</button>
+                </div>
+            </form>}<!-- End Multi Columns Form -->
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,68 @@
+﻿@model BachHoaXanh.Models.Voucher
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@using (Html.BeginForm("Edit", "Vouchers", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.MaVoucher)
+    <div class="form-group text-center">
+        @Html.LabelFor(model => model.MaCode, "Mã code", htmlAttributes: new { @class = "control-label col-md-2 m-1" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MaCode, new { htmlAttributes = new { @class = "form-control m-1 mx-auto", Required = "required", disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.MaCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group text-center">
+        @Html.LabelFor(model => model.GiaTri, "Trị giá voucher", htmlAttributes: new { @class = "control-label col-md-2 m-1 text-center" })
+        <div class="col-md-10 mx-auto">
+            <div class="input-group m-1 mx-auto">
+                @Html.TextBoxFor(model => model.GiaTri, new { @class = "form-control", type = "double", Required = "required", min = 0 })
+                <div class="input-group-append">
+                    <select class="form-control" name="GiaTriType">
+                        @if (Model.GiaTriType == "sotien")
+                        {
+                            <option value="sotien" selected>VNĐ</option>
+                            <option value="phantram">%</option>
+                        }
+                        else
+                        {
+                            <option value="sotien">VNĐ</option>
+                            <option value="phantram" selected>%</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            @Html.ValidationMessageFor(model => model.GiaTri, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group text-center">
+        @Html.LabelFor(model => model.NgayHetHan, "Ngày hết hạn", htmlAttributes: new { @class = "control-label col-md-2 m-2 text-center" })
+        <div class="col-md-10 mx-auto">
+            @Html.TextBoxFor(model => model.NgayHetHan, new { @class = "form-control m-2 mx-auto", type = "date", required = "false" })
+            @Html.ValidationMessageFor(model => model.NgayHetHan, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group text-center">
+        @Html.LabelFor(model => model.MoTa, "Mô tả", htmlAttributes: new { @class = "control-label col-md-2 m-1 text-center" })
+        <div class="col-md-10 mx-auto">
+            @Html.EditorFor(model => model.MoTa, new { htmlAttributes = new { @class = "form-control m-1 mx-auto", Required = "required" } })
+            @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group mt-2 text-center">
+        <input type="submit" value="Lưu lại" class="btn btn-default w-50" style="background: #018846; color: white; width: 50%" />
+    </div>
+</div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

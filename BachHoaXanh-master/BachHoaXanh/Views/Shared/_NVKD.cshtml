@@ -1,0 +1,170 @@
+﻿
+@Styles.Render("~/Content/css")
+<link href="~/Content/Hover.css" rel="stylesheet" />
+@Styles.Render("~/Styles/Fonts")
+@Scripts.Render("~/bundles/modernizr")
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<!-- Favicons -->
+<link rel="icon" href="~/Styles/Image/logo.jpg" type="image/x-icon">
+<title>Bách Hóa Xanh - @ViewBag.Title</title>
+<!-- Google Fonts -->
+<link href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+<!-- Vendor CSS Files -->
+<link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/Content/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="~/Content/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+<link href="~/Content/vendor/quill/quill.snow.css" rel="stylesheet">
+<link href="~/Content/vendor/quill/quill.bubble.css" rel="stylesheet">
+<link href="~/Content/vendor/remixicon/remixicon.css" rel="stylesheet">
+<link href="~/Content/vendor/simple-datatables/style.css" rel="stylesheet">
+
+<!-- Template Main CSS File -->
+<link href="~/Content/style.css" rel="stylesheet">
+<body style="background:#e9edf0">
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center" style="background: #018846">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="#" class="logo d-flex align-items-center">
+                <img src="~/Styles/Image/logoBHX.png" alt="" style="max-height:100px">
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+        <h3 style="color: yellow; margin: 20%;">NHÂN VIÊN KINH DOANH</h3>
+        <ul style="position: absolute; right: 20px; top: 10px; color: azure; list-style-type: none; ">
+            @if (Session["NAME_ADMIN"] != null)
+            {
+                <li><a>@Session["NAME_ADMIN"] </a></li>
+                <li><a href="@Url.Action("Logout","Home")" class='bx bx-log-out' style="cursor:pointer;color:black"> Đăng xuất</a></li>
+            }
+        </ul>
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar" style="height:fit-content">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-heading">Quản lý</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("NVKD","Admin")">
+                    <i class='bx bx-home-alt'></i>
+                    <span>Trang chủ</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","SanPhams")">
+                    <i class="bx bx-package"></i>
+                    <span>Sản phẩm</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","LoaiDanhMucs")">
+                    <i class='bx bx-food-menu'></i>
+                    <span>Loại danh mục</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","DanhMucs")">
+                    <i class="bx bx-category"></i>
+                    <span>Danh mục sản phẩm</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","ThuongHieus")">
+                    <i class='bx bx-store-alt'></i>
+                    <span>Thương hiệu</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","KDKhachHang")">
+                    <i class="bx bx-user"></i>
+                    <span>Khách hàng</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","Vouchers")">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Voucher</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","DonDatHangs")">
+                    <i class="bx bx-receipt"></i>
+                    <span>Đơn hàng</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index","PhieuNhapKhoes")">
+                    <i class="bi bi-shop-window"></i>
+                    <span>Phiếu nhập kho</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("ThongKeThang","ThongKe")">
+                    <i class='bx bx-bar-chart-alt-2'></i>
+                    <span>Thống kê</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+    <main id="main" class="main" style="height:fit-content">
+        @RenderBody()
+    </main>
+    <footer class="card-footer" style=" left: 0; bottom: 0; width: 100%;">
+        <hr />
+        <div class="row" style="padding-left: 50px">
+            <div class="col-md-4 col-sm-6">
+                <h2>Bảo hành</h2>
+                <span>Chính sách mua hàng</span>
+                <br />
+                <span>Chính sách bảo hành</span>
+                <br />
+                <span>Trung tâm bảo hành</span>
+                <br />
+                <span>Tra cứu bảo hành</span>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h2>Liên kết</h2>
+                <span>Tổng đài: 1900.1908 - 028.3622.9900</span>
+                <br />
+                <span>Hệ thống 1.707 cửa hàng Bách Hóa Xanh</span>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h2>Thông tin</h2>
+                <span>Về chúng tôi</span>
+                <br />
+                <span>Liên hệ</span>
+                <br />
+                <span>Góp ý</span>
+                <br />
+                <span>Tra cứu</span>
+            </div>
+
+        </div>
+        <center> <p style="background: #018846; margin:0px">&copy; @DateTime.Now.Year - Bách Hóa Xanh</p></center>
+
+    </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="~/Content/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/Content/vendor/echarts/echarts.min.js"></script>
+    <script src="~/Content/vendor/quill/quill.min.js"></script>
+    <script src="~/Content/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Content/vendor/tinymce/tinymce.min.js"></script>
+    <script src="~/Content/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="~/Content/main.js"></script>
+</body>
